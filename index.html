@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Math Chat</title>
+        <link rel="stylesheet" type="text/css" href="main.css"/>
+        <script type="text/javascript">
+            window.addEventListener("load", function() {
+
+                // create websocket instance
+                //var mySocket = new WebSocket("ws://pycalculator314-ericpboehlke652214.codeanyapp.com:8080/ws");
+                var mySocket = new WebSocket('ws://' + location.host + '/ws');
+
+                // add event listener reacting when message is received
+                mySocket.onmessage = function (event) {
+                    // put text into our output divs
+                    var history = event.data.split(',');
+                    for (i = 0; i < history.length; i++) {
+                        document.getElementById('n' + i.toString()).textContent = history[i];
+                    }
+                };
+                var form = document.getElementsByClassName("calculator");
+                var input = document.getElementById("input");
+                form[0].addEventListener("submit", function (e) {
+                    // on forms submission send input to our server
+                    input_text = input.value;
+                    mySocket.send(input_text);
+                    e.preventDefault()
+                })
+            });
+        </script>
+    </head>
+    <body>
+        <form class="calculator">
+            <input id="input" style="font-size: 14px;"/>
+            <input type="submit" value="calculate" style="font-size: 16px;"/>
+        </form>
+        <div id="output">
+          <div id="n9" class="calculation"></div>
+          <div id="n8" class="calculation"></div>
+          <div id="n7" class="calculation"></div>
+          <div id="n6" class="calculation"></div>
+          <div id="n5" class="calculation"></div>
+          <div id="n4" class="calculation"></div>
+          <div id="n3" class="calculation"></div>
+          <div id="n2" class="calculation"></div>
+          <div id="n1" class="calculation"></div>
+          <div id="n0" class="calculation"></div>
+        </div>
+    </body>
+</html>
